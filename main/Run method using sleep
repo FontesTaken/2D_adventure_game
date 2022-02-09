@@ -1,0 +1,33 @@
+/*
+	Used for the game loop
+	When we start the gameThread, this method is automatically called
+	If fps=30 then we update&draw 30 times per second
+	If fps=60 then we update&draw 60 times per second
+	*/
+	public void run() {
+
+		double drawInterval = 1000000000/FPS; // 1000000000 nanoseconds = 1 second, and we divide by 60 to get the draw interval. We can draw once every 0.01666 seconds
+		double nextDrawTime = System.nanoTime() + drawInterval;
+
+		while (gameThread != null) {
+
+			// 1 UPDATE: update information such as character position
+			update();
+			// 2 DRAW: draw the screen with the updated information
+			repaint(); //You use the paintComponent calling this method
+
+			try {
+				double remainingTime = nextDrawTime - System.nanoTime(); //This returns how much time remaining until the next draw time
+				remainingTime /= 1000000; // sleep() only accepts time in miliseconds so we transform our nanosecond to millisecond
+				if(remainingTime < 0) {
+					remainingTime = 0;
+				}
+				Thread.sleep((long) remainingTime); //This sleep pauses the thread
+
+				nextDrawTime += drawInterval;
+
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+		}
