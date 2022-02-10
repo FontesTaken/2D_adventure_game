@@ -13,7 +13,7 @@ public class GamePanel extends JPanel implements Runnable {
 	 * 16x16 tile. This is the default size for many 2D games
 	 * This is going be the default size of the sprites.
 	 */
-	final int originalTileSize = 16; 
+	final int originalTileSize = 16;
 	final int scale = 3; //This shows the sprites larger
 	
 	/*
@@ -27,9 +27,17 @@ public class GamePanel extends JPanel implements Runnable {
 	public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
 	// SCREEN SETTINGS
 
+	// WORLD SETTINGS
+	public final int maxWorldCol = 50;
+	public final int maxWorldRow = 50;
+	public final int worldWidth = tileSize * maxWorldCol;
+	public final int worldHeight = tileSize * maxWorldRow;
+
+	// WORLD SETTINGS
+
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread; //Simulates the passage of time to update sprites to show "movement"
-	Player player = new Player(this, keyH);
+	public Player player = new Player(this, keyH);
 	TileManager tileM = new TileManager(this);
 
 	//Set FPS
@@ -104,7 +112,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		Graphics2D g2 = (Graphics2D) g;
 
-		tileM.draw((Graphics2D) g); //This has to be first because it's the background
+		tileM.draw(g2); //This has to be first because it's the background
 		player.draw(g2);
 
 		//Dispose of this graphics context and release any system resources that it is using. Good practice to save memory

@@ -13,17 +13,23 @@ public class Player extends Entity{
     GamePanel gp;
     KeyHandler keyH;
 
+    public final int screenX;
+    public final int screenY;
+
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
+
+        screenX = gp.screenWidth / 2 - (gp.tileSize/2);
+        screenY = gp.screenHeight / 2 - (gp.tileSize/2);
 
         setDefaultValues();
         getPlayerImage();
     }
 
     public void setDefaultValues() {
-        x = 100;
-        y = 100;
+        worldX = gp.tileSize * 23; //Position on world map
+        worldY = gp.tileSize * 21; //Position on world map
         speed = 4;
         direction = "down";
     }
@@ -51,16 +57,16 @@ public class Player extends Entity{
                 keyH.rightPressed == true || keyH.leftPressed == true) { //Only when the user presses the keys that the sprite can change
             if (keyH.upPressed == true) {
                 direction = "up";
-                y -= speed;
+                worldY -= speed;
             } else if (keyH.downPressed == true) {
                 direction = "down";
-                y += speed;
+                worldY += speed;
             } else if (keyH.rightPressed == true) {
                 direction = "right";
-                x += speed;
+                worldX += speed;
             } else if (keyH.leftPressed == true) {
                 direction = "left";
-                x -= speed;
+                worldX -= speed;
             }
             spriteCounter++;
             if (spriteCounter > 12) { //This means that every 12 frames  (cause the sprite counter is increasing every frame) the sprite will change
@@ -102,7 +108,7 @@ public class Player extends Entity{
                 break;
         }
 
-        g.drawImage(image, x, y, gp.tileSize, gp.tileSize, null); //Draws an image on the screen
+        g.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null); //Draws an image on the screen
     }
 
 
