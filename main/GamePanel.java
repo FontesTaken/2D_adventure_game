@@ -1,6 +1,7 @@
 package main;
 
 import entity.Player;
+import tile.TileManager;
 
 import java.awt.*;
 
@@ -20,20 +21,16 @@ public class GamePanel extends JPanel implements Runnable {
 	 * Actual tile size that is displayed on the screen
 	 */
 	public final int tileSize = originalTileSize * scale;
-	final int maxScreenCol = 16; 
-	final int maxScreenRow = 12;
-	final int screenWidth = tileSize * maxScreenCol; // 768 pixels
-	final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+	public final int maxScreenCol = 16;
+	public final int maxScreenRow = 12;
+	public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
+	public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
 	// SCREEN SETTINGS
 
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread; //Simulates the passage of time to update sprites to show "movement"
 	Player player = new Player(this, keyH);
-
-	//Set player's default position
-	int playerX = 100;
-	int playerY = 100;
-	int playerSpeed = 4;
+	TileManager tileM = new TileManager(this);
 
 	//Set FPS
 	int FPS = 60;
@@ -107,6 +104,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 		Graphics2D g2 = (Graphics2D) g;
 
+		tileM.draw((Graphics2D) g); //This has to be first because it's the background
 		player.draw(g2);
 
 		//Dispose of this graphics context and release any system resources that it is using. Good practice to save memory
