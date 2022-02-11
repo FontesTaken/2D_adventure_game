@@ -23,6 +23,10 @@ public class Player extends Entity{
         screenX = gp.screenWidth / 2 - (gp.tileSize/2);
         screenY = gp.screenHeight / 2 - (gp.tileSize/2);
 
+        //We want to make this rectangle a bit smaller then the character so it can be easier to pass obstacles
+        //Collision area is the rectangle
+        solidArea = new Rectangle(8,16, 32,32);
+
         setDefaultValues();
         getPlayerImage();
     }
@@ -57,17 +61,31 @@ public class Player extends Entity{
                 keyH.rightPressed == true || keyH.leftPressed == true) { //Only when the user presses the keys that the sprite can change
             if (keyH.upPressed == true) {
                 direction = "up";
-                worldY -= speed;
             } else if (keyH.downPressed == true) {
                 direction = "down";
-                worldY += speed;
             } else if (keyH.rightPressed == true) {
                 direction = "right";
-                worldX += speed;
             } else if (keyH.leftPressed == true) {
                 direction = "left";
-                worldX -= speed;
             }
+
+            //Check tile collision
+            collisionOn = false;
+            gp.cChecker.checkTile(this);
+
+            //If collision is false then the player can move
+            if (collisionOn == false) {
+                if (keyH.upPressed == true) {
+                    worldY -= speed;
+                } else if (keyH.downPressed == true) {
+                    worldY += speed;
+                } else if (keyH.rightPressed == true) {
+                    worldX += speed;
+                } else if (keyH.leftPressed == true) {
+                    worldX -= speed;
+                }
+            }
+
             spriteCounter++;
             if (spriteCounter > 12) { //This means that every 12 frames  (cause the sprite counter is increasing every frame) the sprite will change
                 if (spriteNum == 1) spriteNum = 2;
