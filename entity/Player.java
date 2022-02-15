@@ -15,6 +15,7 @@ public class Player extends Entity{
 
     public final int screenX;
     public final int screenY;
+    int hasKey = 0; //This indicates how many keys does the player have
 
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
@@ -23,9 +24,15 @@ public class Player extends Entity{
         screenX = gp.screenWidth / 2 - (gp.tileSize/2);
         screenY = gp.screenHeight / 2 - (gp.tileSize/2);
 
-        //We want to make this rectangle a bit smaller then the character so it can be easier to pass obstacles
+        //We want to make this rectangle a bit smaller than the character, so it can be easier to pass obstacles
         //Collision area is the rectangle
-        solidArea = new Rectangle(8,16, 32,32);
+        solidArea = new Rectangle();
+        solidArea.x = 8;
+        solidArea.y = 16;
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+        solidArea.width = 32;
+        solidArea.height = 32;
 
         setDefaultValues();
         getPlayerImage();
@@ -73,6 +80,10 @@ public class Player extends Entity{
             collisionOn = false;
             gp.cChecker.checkTile(this);
 
+            //Check object collision
+            int objIndex = gp.cChecker.checkObject(this,true);
+            pickupObject(objIndex);
+
             //If collision is false then the player can move
             if (collisionOn == false) {
                 if (keyH.upPressed == true) {
@@ -92,6 +103,29 @@ public class Player extends Entity{
                 else if (spriteNum == 2) spriteNum = 1;
                 spriteCounter = 0;
             }
+        }
+    }
+
+    public void pickupObject(int index) {
+        if(index != 999) { //This means we touched an object cause the value changed
+            String objectName = gp.obj[index].name;
+
+            switch(objectName){
+                case "Key":
+                    hasKey++;
+                    gp.obj[index] = null;
+                    System.out.println("You've picked up a key. You currently have " + hasKey + " keys!");
+                    break;
+                case "Door":
+                    if(hasKey > 0) {
+                        gp.obj[index] = null;
+                        hasKey--;
+                        System.out.println("You've unlocked the door using one of your keys. You currently have " + hasKey + " keys!");
+                    }else {
+                        System.out.println("You don't have a key to unlock this door. Come back when you find one.");
+                    }
+            }
+
         }
     }
 

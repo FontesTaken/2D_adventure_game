@@ -19,6 +19,8 @@ public class Entity {
     public int spriteNum = 1;
 
     public Rectangle solidArea; // we create this rectangle to detect collision
+
+    public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean collisionOn = false;
 
 }
