@@ -1,6 +1,8 @@
 package main;
 
 import entity.Player;
+import object.OBJ_Key;
+import object.SuperObject;
 import tile.TileManager;
 
 import java.awt.*;
@@ -39,6 +41,10 @@ public class GamePanel extends JPanel implements Runnable {
 	public Player player = new Player(this, keyH);
 	public TileManager tileM = new TileManager(this);
 	public CollisionChecker cChecker = new CollisionChecker(this);
+	public SuperObject obj[] = new SuperObject[10]; //10 slots for objects to be put in. Kinda works like the inventory
+													//in a game. If we pick up object "a" then he disappears from the
+													//game and is put here
+	public AssetSetter aSetter = new AssetSetter(this);
 
 	//Set FPS
 	int FPS = 60;
@@ -50,7 +56,13 @@ public class GamePanel extends JPanel implements Runnable {
 		this.addKeyListener(keyH);
 		this.setFocusable(true); //With this, the GamePanel can be "focused" to receive key input
 	}
-	
+
+	public void setupGame() {
+
+		aSetter.setObject(); //We create this method, so we can add other objects in the future
+							 //We want to call this setupGame method before the game starts
+	}
+
 	public void startGameThread() {
 		gameThread = new Thread(this);
 		gameThread.start(); //Automatically calls the run() method
@@ -112,7 +124,17 @@ public class GamePanel extends JPanel implements Runnable {
 
 		Graphics2D g2 = (Graphics2D) g;
 
+		//TILE
 		tileM.draw(g2); //This has to be first because it's the background
+
+		//OBJECT
+		for (int i = 0; i < obj.length; i++) {
+			if(obj[i] != null) { // Check if the slot is not empty to avoid NullPointer error
+				obj[i].draw(g2,this);
+			}
+		}
+
+		//PLAYER
 		player.draw(g2);
 
 		//Dispose of this graphics context and release any system resources that it is using. Good practice to save memory
