@@ -10,6 +10,7 @@ import java.awt.*;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable {
+
 	// SCREEN SETTINGS
 	/*
 	 * 16x16 tile. This is the default size for many 2D games
@@ -17,7 +18,6 @@ public class GamePanel extends JPanel implements Runnable {
 	 */
 	final int originalTileSize = 16;
 	final int scale = 3; //This shows the sprites larger
-	
 	/*
 	 * 48x48 Tile (16*3)
 	 * Actual tile size that is displayed on the screen
@@ -29,6 +29,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
 	// SCREEN SETTINGS
 
+
 	// WORLD SETTINGS
 	public final int maxWorldCol = 50;
 	public final int maxWorldRow = 50;
@@ -36,15 +37,26 @@ public class GamePanel extends JPanel implements Runnable {
 	public final int worldHeight = tileSize * maxWorldRow;
 	// WORLD SETTINGS
 
+
+	//SYSTEM
 	KeyHandler keyH = new KeyHandler();
-	Thread gameThread; //Simulates the passage of time to update sprites to show "movement"
-	public Player player = new Player(this, keyH);
 	public TileManager tileM = new TileManager(this);
 	public CollisionChecker cChecker = new CollisionChecker(this);
-	public SuperObject obj[] = new SuperObject[10]; //10 slots for objects to be put in. Kinda works like the inventory
-													//in a game. If we pick up object "a" then he disappears from the
-													//game and is put here
 	public AssetSetter aSetter = new AssetSetter(this);
+	Sound sound = new Sound();
+	Thread gameThread; //Simulates the passage of time to update sprites to show "movement"
+	//SYSTEM
+
+
+	//ENTITY AND OBJECTS
+	public Player player = new Player(this, keyH);
+	/*
+	10 slots for objects to be put in. Kinda works like the inventory in a game.
+	If we pick up object "a" then he disappears from thegame and is put here
+	 */
+	public SuperObject obj[] = new SuperObject[10];
+	//ENTITY AND OBJECTS
+
 
 	//Set FPS
 	int FPS = 60;
@@ -61,6 +73,9 @@ public class GamePanel extends JPanel implements Runnable {
 
 		aSetter.setObject(); //We create this method, so we can add other objects in the future
 							 //We want to call this setupGame method before the game starts
+
+		playMusic(0); //This plays the background music in a loop
+
 	}
 
 	public void startGameThread() {
@@ -84,7 +99,6 @@ public class GamePanel extends JPanel implements Runnable {
 		long drawCount = 0;
 
 		while (gameThread != null) {
-
 			currentTime = System.nanoTime();
 			delta += (currentTime-lastTime) / drawInterval;
 			timer += (currentTime - lastTime);
@@ -105,8 +119,6 @@ public class GamePanel extends JPanel implements Runnable {
 				drawCount = 0;
 				timer = 0;
 			}
-
-
 		}
 	}
 
@@ -139,6 +151,23 @@ public class GamePanel extends JPanel implements Runnable {
 
 		//Dispose of this graphics context and release any system resources that it is using. Good practice to save memory
 		g2.dispose();
+	}
+
+	//Play the background music
+	public void playMusic(int i) {
+		sound.setFile(i);
+		sound.play();
+		sound.loop();
+	}
+
+	public void stopMusic() {
+		sound.stop();
+	}
+
+	//Play a sound effect
+	public void playSE(int i) {
+		sound.setFile(i);
+		sound.play();
 	}
 	
 }
