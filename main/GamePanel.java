@@ -43,7 +43,9 @@ public class GamePanel extends JPanel implements Runnable {
 	public TileManager tileM = new TileManager(this);
 	public CollisionChecker cChecker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this);
-	Sound sound = new Sound();
+	Sound music = new Sound();
+	Sound se = new Sound();
+	public UI ui = new UI(this);
 	Thread gameThread; //Simulates the passage of time to update sprites to show "movement"
 	//SYSTEM
 
@@ -149,25 +151,28 @@ public class GamePanel extends JPanel implements Runnable {
 		//PLAYER
 		player.draw(g2);
 
+		//UI
+		ui.draw(g2);
+
 		//Dispose of this graphics context and release any system resources that it is using. Good practice to save memory
 		g2.dispose();
 	}
 
 	//Play the background music
 	public void playMusic(int i) {
-		sound.setFile(i);
-		sound.play();
-		sound.loop();
+		music.setFile(i);
+		music.play();
+		music.loop();
 	}
 
 	public void stopMusic() {
-		sound.stop();
+		music.stop();
 	}
 
 	//Play a sound effect
 	public void playSE(int i) {
-		sound.setFile(i);
-		sound.play();
+		se.setFile(i);
+		se.play();
 	}
 	
 }

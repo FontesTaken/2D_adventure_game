@@ -15,7 +15,7 @@ public class Player extends Entity{
 
     public final int screenX;
     public final int screenY;
-    int hasKey = 0; //This indicates how many keys does the player have
+    public int hasKey = 0; //This indicates how many keys does the player have
 
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
@@ -115,22 +115,28 @@ public class Player extends Entity{
                     gp.playSE(1);
                     hasKey++;
                     gp.obj[index] = null;
-                    System.out.println("You've picked up a key. You currently have " + hasKey + " keys!");
+                    gp.ui.showMessage("You picked up a key!");
                     break;
                 case "Door":
                     if(hasKey > 0) {
                         gp.playSE(3);
                         gp.obj[index] = null;
                         hasKey--;
-                        System.out.println("You've unlocked the door using one of your keys. You currently have " + hasKey + " keys!");
+                        gp.ui.showMessage("You've opened the door!");
                     }else {
-                        System.out.println("You don't have a key to unlock this door. Come back when you find one.");
+                        gp.ui.showMessage("You need a key");
                     }
                     break;
                 case "Boots":
+                    gp.ui.showMessage("You're faster now!");
                     gp.playSE(2);
                     speed += 2;
                     gp.obj[index] = null;
+                    break;
+                case "Chest":
+                    gp.ui.gameFinished = true;
+                    gp.stopMusic();
+                    gp.playSE(4);
                     break;
             }
 
